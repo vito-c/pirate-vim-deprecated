@@ -1,13 +1,42 @@
 # spf13-vim : Steve Francia's Vim Distribution
+# pirate-vim : Vito's Vim Distro
+# Special Thanks to Steve Francia and spf13-vim distro
 
-                    __ _ _____              _
-         ___ _ __  / _/ |___ /      __   __(_)_ __ ___
-        / __| '_ \| |_| | |_ \ _____\ \ / /| | '_ ` _ \
-        \__ \ |_) |  _| |___) |_____|\ V / | | | | | | |
-        |___/ .__/|_| |_|____/        \_/  |_|_| |_| |_|
-            |_|
 
-spf13-vim is a distribution of vim plugins and resources for Vim, Gvim and [MacVim].
+                       .ed'''' '''$$$$be.                     
+                     -'           ^''**$$$e.                  
+                   .'                   '$$$c                 
+                  /                      '4$$b                
+                 d  3                     $$$$                
+                 $  *                   .$$$$$$               
+                .$  ^c           $$$$$e$$$$$$$$.              
+                d$L  4.         4$$$$$$$$$$$$$$b              
+                $$$$b ^ceeeee.  4$$ECL.F*$$$$$$$              
+    e$''=.      $$$$P d$$$$F $ $$$$$$$$$- $$$$$$              
+   z$$b. ^c     3$$$F '$$$$b   $'$$$$$$$  $$$$*'      .=''$c  
+  4$$$$L   \     $$P'  '$$b   .$ $$$$$...e$$        .=  e$$$. 
+  ^*$$$$$c  %..   *c    ..    $$ 3$$$$$$$$$$eF     zP  d$$$$$ 
+    '**$$$ec   '\   %ce''    $$$  $$$$$$$$$$*    .r' =$$$$P'' 
+          '*$b.  'c  *$e.    *** d$$$$$'L$$    .d'  e$$***'   
+            ^*$$c ^$c $$$      4J$$$$$% $$$ .e*'.eeP'         
+               '$$$$$$''$=e....$*$$**$cz$$' '..d$*'           
+                 '*$$$  *=%4.$ L L$ P3$$$F $$$P'              
+                    '$   '%*ebJLzb$e$$$$$b $P'                
+                      %..      4$$$$$$$$$$ '                  
+                       $$$e   z$$$$$$$$$$%                    
+                        '*$c  '$$$$$$$P'                      
+                         .'''*$$$$$$$$bc                      
+                      .-'    .$***$$$'''*e.                   
+                   .-'    .e$'     '*$c  ^*b.                 
+            .=*''''    .e$*'          '*bc  '*$e..            
+          .$'        .z*'               ^*$e.   '*****e.      
+          $$ee$c   .d'                     '*$.        3.     
+          ^*$E')$..$'                         *   .ee==d%     
+             $.d$$$*                           *  J$$$e*      
+              '''''                             '$$$'   
+ 
+
+pirate-vim is a distribution of vim plugins and resources for Vim, Gvim and [MacVim].
 
 It is a good starting point for anyone intending to use VIM for development running equally well on Windows, Linux, \*nix and Mac.
 
@@ -21,8 +50,8 @@ Great care has been taken to ensure that each plugin plays nicely with others, a
 
 Lastly (and perhaps, most importantly) It is completely cross platform. It works well on Windows, Linux and OSX without any modifications or additional configurations. If you are using [MacVim] or Gvim additional features are enabled. So regardless of your environment just clone and run.
 
-# spf13-vim 3.0
-January 2012 spf13-vim released it's third major iteration. **This is important as it requires a reinstall**, but trust me it's worth it.
+# pirate-vim 3.0
+January 2012 pirate-vim released it's third major iteration. **This is important as it requires a reinstall**, but trust me it's worth it.
 
 The biggest change is the switch from using git submodules to using the excellent [Vundle] system. While git submodules seemed like a good idea at the time, it wasn't. It was always problematic. Additionally because a submodule points to a refspec and not a branch, it was a constant maintenance nightmare to keep everything up to date.
 
@@ -30,13 +59,13 @@ The biggest change is the switch from using git submodules to using the excellen
 
 We have also changed out most of the plugins in favor of newer more stable alternatives. Additionally we have significantly reduced the number of plugins requiring python or ruby.
 
-The goal has always been to add functionality without changing all the features, functionality and keystrokes we all love. Using spf13-vim we've kept all the default behaviors (by and large), so if you ever find yourself on a vanilla environment you'll feel right at home.
+The goal has always been to add functionality without changing all the features, functionality and keystrokes we all love. Using pirate-vim we've kept all the default behaviors (by and large), so if you ever find yourself on a vanilla environment you'll feel right at home.
 
 # Installation
 
 ## Linux, \*nix, Mac OSX Installation
 
-The easiest way to install spf13-vim is to use our [automatic installer](http://j.mp/spf13-vim3) by simply copying and pasting the following line into a terminal. This will install spf13-vim and backup your existing vim configuration. If you are upgrading from a prior version (before 3.0) this is also the recommended installation.
+The easiest way to install pirate-vim is to use our [automatic installer](http://j.mp/spf13-vim3) by simply copying and pasting the following line into a terminal. This will install pirate-vim and backup your existing vim configuration. If you are upgrading from a prior version (before 3.0) this is also the recommended installation.
 
 ```bash
     
@@ -92,9 +121,9 @@ to verify all good, run:
     Features: Largefile NTLM SSL SSPI libz
 
 
-#### Installing spf13-vim on Windows
+#### Installing pirate-vim on Windows
 
-The easiest way is to download and run the spf13-vim-windows-install.cmd file. Remember to run this file in **Administrator Mode** if you want the symlinks to be created successfully.
+The easiest way is to download and run the pirate-vim-windows-install.cmd file. Remember to run this file in **Administrator Mode** if you want the symlinks to be created successfully.
 
 ## Updating to the latest version
 The simpliest (and safest) way to update is to simply rerun the installer. It will completely and non destructively upgrade to the latest version.
@@ -108,7 +137,7 @@ The simpliest (and safest) way to update is to simply rerun the installer. It wi
 Alternatively you can manually perform the following steps. If anything has changed with the structure of the configuration you will need to create the appropriate symlinks.
 
 ```bash
-    cd $HOME/to/spf13-vim/
+    cd $HOME/to/pirate-vim/
     git pull
     vim +BundleInstall! +BundleClean +q
 ```
