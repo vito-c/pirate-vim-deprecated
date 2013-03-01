@@ -40,6 +40,7 @@ fi
 
 echo "To the High Seeea-links"
 lnif $endpath/vimrc $HOME/.vimrc
+lnif $endpath/gitconfig $HOME/.gitconfig
 lnif $endpath/vimrc.fork $HOME/.vimrc.fork
 lnif $endpath/vimrc.bundles $HOME/.vimrc.bundles
 lnif $endpath/vimrc.bundles.fork $HOME/.vimrc.bundles.fork

@@ -1,18 +1,38 @@
 " Modeline and Notes {
-" vim: set foldmarker={,} foldlevel=0 foldmethod=marker spell:
+" vim: set foldmarker={,} foldlevel=0 foldmethod=marker:
 "
-"                    __ _ _____              _
-"         ___ _ __  / _/ |___ /      __   __(_)_ __ ___
-"        / __| '_ \| |_| | |_ \ _____\ \ / /| | '_ ` _ \
-"        \__ \ |_) |  _| |___) |_____|\ V / | | | | | | |
-"        |___/ .__/|_| |_|____/        \_/  |_|_| |_| |_|
-"            |_|
-"
-"   This is the personal .vimrc.bundles file of Steve Francia.
-"   While much of it is beneficial for general use, I would
-"   recommend picking out the parts you want and understand.
-"
-"   You can find me at http://spf13.com
+"                       .ed'''' '''$$$$be.                     
+"                     -'           ^''**$$$e.                  
+"                   .'                   '$$$c                 
+"                  /                      '4$$b                
+"                 d  3                     $$$$                
+"                 $  *                   .$$$$$$               
+"                .$  ^c           $$$$$e$$$$$$$$.              
+"                d$L  4.         4$$$$$$$$$$$$$$b              
+"                $$$$b ^ceeeee.  4$$ECL.F*$$$$$$$              
+"    e$''=.      $$$$P d$$$$F $ $$$$$$$$$- $$$$$$              
+"   z$$b. ^c     3$$$F '$$$$b   $'$$$$$$$  $$$$*'      .=''$c  
+"  4$$$$L   \     $$P'  '$$b   .$ $$$$$...e$$        .=  e$$$. 
+"  ^*$$$$$c  %..   *c    ..    $$ 3$$$$$$$$$$eF     zP  d$$$$$ 
+"    '**$$$ec   '\   %ce''    $$$  $$$$$$$$$$*    .r' =$$$$P'' 
+"          '*$b.  'c  *$e.    *** d$$$$$'L$$    .d'  e$$***'   
+"            ^*$$c ^$c $$$      4J$$$$$% $$$ .e*'.eeP'         
+"               '$$$$$$''$=e....$*$$**$cz$$' '..d$*'           
+"                 '*$$$  *=%4.$ L L$ P3$$$F $$$P'              
+"                    '$   '%*ebJLzb$e$$$$$b $P'                
+"                      %..      4$$$$$$$$$$ '                  
+"                       $$$e   z$$$$$$$$$$%                    
+"                        '*$c  '$$$$$$$P'                      
+"                         .'''*$$$$$$$$bc                      
+"                      .-'    .$***$$$'''*e.                   
+"                   .-'    .e$'     '*$c  ^*b.                 
+"            .=*''''    .e$*'          '*bc  '*$e..            
+"          .$'        .z*'               ^*$e.   '*****e.      
+"          $$ee$c   .d'                     '*$.        3.     
+"          ^*$E')$..$'                         *   .ee==d%     
+"             $.d$$$*                           *  J$$$e*      
+"              '''''                             '$$$'   
+" 
 " }
 
 " Environment {
@@ -43,6 +63,7 @@
         Bundle 'gmarik/vundle'
         Bundle 'MarcWeber/vim-addon-mw-utils'
         Bundle 'tomtom/tlib_vim'
+        Bundle 'dahu/vimple'
         if executable('ack-grep')
             let g:ackprg="ack-grep -H --nocolor --nogroup --column"
             Bundle 'mileszs/ack.vim'
@@ -77,22 +98,23 @@
 
     " General
         if count(g:spf13_bundle_groups, 'general')
-            Bundle 'scrooloose/nerdtree'
+            "Bundle 'scrooloose/nerdtree'
             Bundle 'altercation/vim-colors-solarized'
             Bundle 'spf13/vim-colors'
             Bundle 'tpope/vim-surround'
-            Bundle 'spf13/vim-autoclose'
+            "Bundle 'spf13/vim-autoclose'
             Bundle 'kien/ctrlp.vim'
             Bundle 'vim-scripts/sessionman.vim'
             Bundle 'matchit.zip'
-            Bundle 'Lokaltog/vim-powerline'
-            Bundle 'Lokaltog/vim-easymotion'
+            Bundle 'Lokaltog/powerline'
+            "Bundle 'Lokaltog/vim-easymotion'
             Bundle 'godlygeek/csapprox'
-            Bundle 'jistr/vim-nerdtree-tabs'
+            "Bundle 'jistr/vim-nerdtree-tabs'
             Bundle 'flazz/vim-colorschemes'
             Bundle 'mbbill/undotree'
-            Bundle 'myusuf3/numbers.vim'
-            Bundle 'nathanaelkane/vim-indent-guides'
+            "Bundle 'myusuf3/numbers.vim'
+            "Bundle 'nathanaelkane/vim-indent-guides'
+            Bundle 'Raimondi/vim-buffalo'
             if !exists('g:spf13_no_views')
                 Bundle 'vim-scripts/restore_view.vim'
             endif
@@ -190,4 +212,3 @@
     " set autowrite                  " automatically write a file when leaving a modified buffer
     set shortmess+=filmnrxoOtT      " abbrev. of messages (avoids 'hit enter')
 " }
-
