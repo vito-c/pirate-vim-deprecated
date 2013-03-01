@@ -1,6 +1,6 @@
 " Modeline and Notes {
-" vim: set sw=4 ts=4 sts=4 et tw=78 foldmarker={,} foldlevel=0 foldmethod=marker 
-"
+"  vim: set sw=4 ts=4 sts=4 et tw=78 foldmarker={,} foldlevel=0 foldmethod=marker:
+""
 "                       .ed'''' '''$$$$be.                     
 "                     -'           ^''**$$$e.                  
 "                   .'                   '$$$c                 
@@ -93,6 +93,10 @@
     set mousehide               " Hide the mouse cursor while typing
     scriptencoding utf-8
 
+    if has("autocmd")
+      " Source the vimrc file after saving it
+      autocmd bufwritepost .vimrc source $MYVIMRC
+    endif
     if has ('x') && has ('gui') " On Linux use + register for copy-paste
         set clipboard=unnamedplus
     elseif has ('gui')          " On mac and Windows, use * register for copy-paste
@@ -126,7 +130,7 @@
         endif
 
         " To disable views add the following to your .vimrc.bundles.local file:
-           let g:spf13_no_views = 1
+        "  let g:spf13_no_views = 1
         if !exists('g:spf13_no_views')
             " Add exclusions to mkview and loadview
             " eg: *.*, svn-commit.tmp
@@ -140,16 +144,16 @@
 
 " Vim UI {
 
-    if filereadable(expand("~/.vim/bundle/vim-colors-solarized/colors/solarized.vim"))
-        let g:solarized_termcolors=256
-        color solarized                 " Load a colorscheme
-    endif
-        let g:solarized_termtrans=1
-        let g:solarized_contrast="high"
-        let g:solarized_visibility="high"
+    "if filereadable(expand("~/.vim/bundle/vim-colors-solarized/colors/solarized.vim"))
+        "let g:solarized_termcolors=256
+        "color solarized                 " Load a colorscheme
+    "endif
+        "let g:solarized_termtrans=1
+        "let g:solarized_contrast="high"
+        "let g:solarized_visibility="high"
+    color molokai                    " Load a colorscheme
     set tabpagemax=15               " Only show 15 tabs
     set showmode                    " Display the current mode
-
     set cursorline                  " Highlight current line
 
     if has('cmdline_info')
@@ -183,11 +187,12 @@
     set wildmenu                    " Show list instead of just completing
     set wildmode=list:longest,full  " Command <Tab> completion, list matches, then longest common part, then all.
     set whichwrap=b,s,h,l,<,>,[,]   " Backspace and cursor keys wrap too
-    set scrolljump=5                " Lines to scroll when cursor leaves screen
-    set scrolloff=3                 " Minimum lines to keep above and below cursor
+    "set scrolljump=5                " Lines to scroll when cursor leaves screen
+    set scrolloff=999                 " Minimum lines to keep above and below cursor
     set foldenable                  " Auto fold code
-    set list
-    set listchars=tab:,.,trail:.,extends:#,nbsp:. " Highlight problematic whitespace
+    "set listchars=tab:,.,trail:.,extends:#,nbsp:. " Highlight problematic whitespace
+    set listchars=tab:▸\ ,eol:¬
+    nmap <leader><leader>l :set list!<CR>
 
 " }
 
@@ -196,8 +201,8 @@
     set nowrap                      " Wrap long lines
     set autoindent                  " Indent at the same level of the previous line
     set shiftwidth=4                " Use indents of 4 spaces
-    set expandtab                   " Tabs are spaces, not tabs
-    set tabstop=4                   " An indentation every four columns
+    "set expandtab                   " Tabs are spaces, not tabs
+    "set tabstop=4                   " An indentation every four columns
     set softtabstop=4               " Let backspace delete indent
     "set matchpairs+=<:>             " Match, to be used with %
     set pastetoggle=<F12>           " pastetoggle (sane indentation on pastes)
@@ -214,11 +219,12 @@
     " location. To override this behavior and set it back to '\' (or any other
     " character) add the following to your .vimrc.bundles.local file:
     "   let g:spf13_leader='\'
-    if !exists('g:spf13_leader')
-        let mapleader = ','
-    else
-        let mapleader=g:spf13_leader
-    endif
+    " if !exists('g:spf13_leader')
+    "     let mapleader = ','
+    " else
+    "     let mapleader=g:spf13_leader
+    " endif
+    let mapleader = ' '
 
     " Easier moving in tabs and windows
     " The lines conflict with the default digraph mapping of <C-K>
@@ -289,6 +295,7 @@
     " Visual shifting (does not exit Visual mode)
     vnoremap < <gv
     vnoremap > >gv
+    nmap gV `[v`]
 
     " Fix home and end keybindings for screen, particularly on mac
     " - for some reason this fixes the arrow keys too. huh.
@@ -303,10 +310,12 @@
     " Some helpers to edit mode
     " http://vimcasts.org/e/14
     cnoremap %% <C-R>=expand('%:h').'/'<cr>
+    map <leader>f :find
     map <leader>ew :e %%
     map <leader>es :sp %%
     map <leader>ev :vsp %%
     map <leader>et :tabe %%
+    nmap <leader>v :tabedit $MYVIMRC<CR>
 
     " Adjust viewports to the same size
     map <Leader>= <C-w>=
@@ -580,9 +589,6 @@
             set guifont=Andale\ Mono\ Regular\ 16,Menlo\ Regular\ 15,Consolas\ Regular\ 16,Courier\ New\ Regular\ 18
         else
             set guifont=Andale\ Mono\ Regular:h16,Menlo\ Regular:h15,Consolas\ Regular:h16,Courier\ New\ Regular:h18
-        endif
-        if has('gui_macvim')
-            set transparency=5      " Make the window slightly transparent
         endif
     else
         if &term == 'xterm' || &term == 'screen'
