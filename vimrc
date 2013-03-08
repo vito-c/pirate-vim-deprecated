@@ -184,11 +184,6 @@
             set nornu
         endif
     endfunc
-    nnoremap <leader>no :call NumberOff()<CR>
-    "nnoremap <leader>no :set nu :set nonu<CR>
-    nnoremap <leader>nn :call NumberToggle()<CR>
-    nnoremap <leader>nr :set relativenumber<CR>
-    nnoremap <leader>nu :set number<CR>
 "}
 
 " Vim UI {
@@ -263,6 +258,10 @@
 
 " Key (re)Mappings {
     let mapleader = ' '
+    nnoremap <leader>no :call NumberOff()<CR>
+    nnoremap <leader>nn :call NumberToggle()<CR>
+    nnoremap <leader>nr :set relativenumber<CR>
+    nnoremap <leader>nu :set number<CR>
 
     noremap <leader><leader>l :set list!<CR>
     " Set marks correctly
@@ -277,7 +276,6 @@
     " The lines conflict with the default digraph mapping of <C-K>
     " If you prefer that functionality, add let g:spf13_no_easyWindows = 1
     " in your .vimrc.bundles.local file
-    " nnoremap <leader>
 
     map <C-J> <C-W>j
     map <C-K> <C-W>k
@@ -375,7 +373,8 @@
 
     " Map <Leader>ff to display all lines with keyword under cursor
     " and ask which one to jump to
-    nmap <Leader>ff [I:let nr = input("Which one: ")<Bar>exe "normal " . nr ."[\t"<CR>
+    "nmap <Leader>ff [I:let nr = input("Which one: ")<Bar>exe "normal " . nr ."[\t"<CR>
+	nmap <leader>ff :vimgrep <C-R>=expand("<cword>")<CR> %<CR>
 
     " Easier horizontal scrolling
     map zl zL
