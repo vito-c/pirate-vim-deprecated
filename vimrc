@@ -165,9 +165,10 @@
 
 	function! ToggleBuffer(bufname, pfx)
 		let buflist = GetBufferList()
-		for bufnum in map(filter(split(buflist, '\n'), 'v:val =~ "'.a:bufname.'"'), 'str2nr(matchstr(v:val, "\\d\\+"))')
+		"let pat = '"'.a:bufname.'"' | echo filter(split('abc keep also def'), 'pat =~ v:val' )
+		for bufnum in map(filter(split(buflist, '\n'), 'v:val =~ a:bufname'), 'str2nr(matchstr(v:val, "\\d\\+"))')
 			if bufwinnr(bufnum) != -1
-				exec('bd '.a:bufname)
+				exec('bd '.bufnum)
 				return
 			endif
 		endfor
@@ -635,7 +636,7 @@
 		" Obtain diff from right side
 		nnoremap <leader>dl call :PirateDiffRight()<CR>
 
-		nnoremap <silent> <leader>gg :call ToggleBuffer(".git/index", 'g')<CR>
+		nnoremap <silent> <leader>gg :call ToggleBuffer('.git/index\\|.git/COMMIT_EDITMSG', 'g')<CR>
         nnoremap <silent> <leader>gd :Gdiff<CR>
         nnoremap <silent> <leader>gc :Gcommit<CR>
         nnoremap <silent> <leader>gb :Gblame<CR>
