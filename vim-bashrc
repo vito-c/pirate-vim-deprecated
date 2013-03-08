@@ -1,0 +1,11 @@
+#!/usr/local/bin/bash
+shopt -s extglob
+shopt -s cdspell
+shopt -s nocaseglob
+shopt -s histappend
+shopt -u expand_aliases
+shopt -s globstar
+export vimdir=$HOME/.vim
+export EDITOR=/Applications/MacVim.app/Contents/MacOS/Vim
+export PATH="/usr/local/bin:/usr/local/bin/bash:/usr/sbin/user:~/.vim/bin:$FLEX_HOME/bin:$PATH"
+

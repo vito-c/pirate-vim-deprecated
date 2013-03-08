@@ -1,6 +1,7 @@
 " Modeline and Notes {
-"  vim: set sw=4 ts=4 sts=4 et tw=78 foldmarker={,} foldlevel=0 foldmethod=marker:
-""
+"  vim: set sw=4 ts=4 sts=4 tw=78 :
+"" foldmarker={,} foldlevel=1 foldmethod=marker:
+"
 "                       .ed'''' '''$$$$be.                     
 "                     -'           ^''**$$$e.                  
 "                   .'                   '$$$c                 
@@ -61,18 +62,6 @@
 
 " Bundles {
 
-    " Use local bundles if available {
-        if filereadable(expand("~/.vimrc.bundles.local"))
-            source ~/.vimrc.bundles.local
-        endif
-    " }
-
-    " Use fork bundles if available {
-        if filereadable(expand("~/.vimrc.bundles.fork"))
-            source ~/.vimrc.bundles.fork
-        endif
-    " }
-
     " Use bundles config {
         if filereadable(expand("~/.vimrc.bundles"))
             source ~/.vimrc.bundles
@@ -82,6 +71,12 @@
 " }
 
 " General {
+
+    "Setup Shell {
+        " custom shell options
+        set shell=/usr/local/bin/bash\ --rcfile\ ~/.pirate-vim/vim-bashrc\ -i
+    " }
+
 
     set background=dark         " Assume a dark background
     if !has('gui')
@@ -97,6 +92,7 @@
       " Source the vimrc file after saving it
       autocmd bufwritepost .vimrc source $MYVIMRC
     endif
+
     if has ('x') && has ('gui') " On Linux use + register for copy-paste
         set clipboard=unnamedplus
     elseif has ('gui')          " On mac and Windows, use * register for copy-paste
@@ -107,10 +103,10 @@
     " a new buffer is opened; to prevent this behavior, add the following to
     " your .vimrc.bundles.local file:
     "   let g:spf13_no_autochdir = 1
-    if !exists('g:spf13_no_autochdir')
-        autocmd BufEnter * if bufname("") !~ "^\[A-Za-z0-9\]*://" | lcd %:p:h | endif
-        " Always switch to the current file directory
-    endif
+    "if !exists('g:spf13_no_autochdir')
+    "    autocmd BufEnter * if bufname("") !~ "^\[A-Za-z0-9\]*://" | lcd %:p:h | endif
+    "    " Always switch to the current file directory
+    "endif
 
     "set autowrite                       " Automatically write a file when leaving a modified buffer
     set shortmess+=filmnrxoOtT          " Abbrev. of messages (avoids 'hit enter')
@@ -121,6 +117,12 @@
     "set spell                           " Spell checking on
     set hidden                          " Allow buffer switching without saving
 
+    " Setup Paths{
+        set path=~/workrepos/vito-funtime/**/src/**
+        set path+=~/workrepos/farmville2-main/Client/**/src/**
+        set path+=~/workrepos/farmville2-main/shared/**
+        set path+=~/workrepos/farm-mobile/**
+    " }
     " Setting up the directories {
         set backup                  " Backups are nice ...
         if has('persistent_undo')
@@ -141,6 +143,53 @@
     " }
 
 " }
+
+" Custom Functions {
+    " TODO: add toggles quickfix window
+    " TODO: automatically open quickfix window cscope, make etc
+    " TODO: set shift enter in quickfix to keep you in the window and take u
+    " to the next match in the list
+    " TODO: also shift enter in full command mode would be cool
+    " TODO: fix neocomplcache so that you can press ^N ^[ and not ^N<CR>^[
+    " TODO: get make functionality for c# unity project
+    " TODO: install pyclewn and get functionality working
+    " TODO: command line tab should complete and control space should list
+	" TODO: get vim hearders searchable via tags
+	" TODO: <F5> needs to force refresh tags and cscope
+	" TODO: Fugitve doesn't do it's thing
+
+    " Search for selected text, forwards or backwards.
+    vnoremap <silent> * :<C-U>
+                \let old_reg=getreg('"')<Bar>let old_regtype=getregtype('"')<CR>
+                \gvy/<C-R><C-R>=substitute(
+                \escape(@", '/\.*$^~['), '\_s\+', '\\_s\\+', 'g')<CR><CR>
+                \gV:call setreg('"', old_reg, old_regtype)<CR>
+    vnoremap <silent> # :<C-U>
+                \let old_reg=getreg('"')<Bar>let old_regtype=getregtype('"')<CR>
+                \gvy?<C-R><C-R>=substitute(
+                \escape(@", '?\.*$^~['), '\_s\+', '\\_s\\+', 'g')<CR><CR>
+                \gV:call setreg('"', old_reg, old_regtype)<CR>
+
+    function! NumberToggle()
+        if(&nu == 1)
+            set relativenumber
+        else
+            set number
+        endif
+    endfunc
+    function! NumberOff()
+        if(&nu == 1)
+            set nonu
+        elseif(&rnu)
+            set nornu
+        endif
+    endfunc
+    nnoremap <leader>no :call NumberOff()<CR>
+    "nnoremap <leader>no :set nu :set nonu<CR>
+    nnoremap <leader>nn :call NumberToggle()<CR>
+    nnoremap <leader>nr :set relativenumber<CR>
+    nnoremap <leader>nu :set number<CR>
+"}
 
 " Vim UI {
 
@@ -170,8 +219,8 @@
         set statusline=%<%f\                     " Filename
         set statusline+=%w%h%m%r                 " Options
         set statusline+=%{fugitive#statusline()} " Git Hotness
-        set statusline+=\ [%{&ff}/%Y]            " Filetype
-        set statusline+=\ [%{getcwd()}]          " Current dir
+        "set statusline+=\ [%{&ff}/%Y]            " Filetype
+        "set statusline+=\ [%{getcwd()}]          " Current dir
         set statusline+=%=%-14.(%l,%c%V%)\ %p%%  " Right aligned file nav info
     endif
 
@@ -192,7 +241,6 @@
     set foldenable                  " Auto fold code
     "set listchars=tab:,.,trail:.,extends:#,nbsp:. " Highlight problematic whitespace
     set listchars=tab:▸\ ,eol:¬
-    nmap <leader><leader>l :set list!<CR>
 
 " }
 
@@ -202,7 +250,7 @@
     set autoindent                  " Indent at the same level of the previous line
     set shiftwidth=4                " Use indents of 4 spaces
     "set expandtab                   " Tabs are spaces, not tabs
-    "set tabstop=4                   " An indentation every four columns
+    set tabstop=4                   " An indentation every four columns
     set softtabstop=4               " Let backspace delete indent
     "set matchpairs+=<:>             " Match, to be used with %
     set pastetoggle=<F12>           " pastetoggle (sane indentation on pastes)
@@ -214,43 +262,50 @@
 " }
 
 " Key (re)Mappings {
-
-    " The default leader is '\', but many people prefer ',' as it's in a standard
-    " location. To override this behavior and set it back to '\' (or any other
-    " character) add the following to your .vimrc.bundles.local file:
-    "   let g:spf13_leader='\'
-    " if !exists('g:spf13_leader')
-    "     let mapleader = ','
-    " else
-    "     let mapleader=g:spf13_leader
-    " endif
     let mapleader = ' '
+
+    noremap <leader><leader>l :set list!<CR>
+    " Set marks correctly
+    noremap ' `
+    noremap ` '
+
+    inoremap <C-E> <ESC>A
+    inoremap <C-R> <ESC>mcA;<ESC>`ca
+    map <leader>; mcA;<ESC>'c
 
     " Easier moving in tabs and windows
     " The lines conflict with the default digraph mapping of <C-K>
     " If you prefer that functionality, add let g:spf13_no_easyWindows = 1
     " in your .vimrc.bundles.local file
+    " nnoremap <leader>
 
-    if !exists('g:spf13_no_easyWindows')
-        map <C-J> <C-W>j<C-W>_
-        map <C-K> <C-W>k<C-W>_
-        map <C-L> <C-W>l<C-W>_
-        map <C-H> <C-W>h<C-W>_
-    endif
-
+    map <C-J> <C-W>j
+    map <C-K> <C-W>k
+    map <C-L> <C-W>l
+    map <C-H> <C-W>h
+    map <leader>w= <C-W>=
+    map <leader>w+ <C-W>+
+    map <leader>w_ <C-W>_
+    map <leader>w- <C-W>-
+    map <leader>wc <C-W>c
+    map <leader>wo <C-W>o
+    map <leader>c :cclose<CR>
+    map <leader>o :copen<CR>
+ 
     " Wrapped lines goes down/up to next row, rather than next line in file.
     nnoremap j gj
     nnoremap k gk
+
 
     " The following two lines conflict with moving to top and
     " bottom of the screen
     " If you prefer that functionality, add the following to your
     " .vimrc.bundles.local file:
     "   let g:spf13_no_fastTabs = 1
-    if !exists('g:spf13_no_fastTabs')
-        map <S-H> gT
-        map <S-L> gt
-    endif
+    "if !exists('g:spf13_no_fastTabs')
+    "    map <S-H> gT
+    "    map <S-L> gt
+    "endif
 
     " Stupid shift key fixes
     if !exists('g:spf13_no_keyfixes')
@@ -265,12 +320,15 @@
             command! -bang QA qa<bang>
             command! -bang Qa qa<bang>
         endif
-
-        cmap Tabe tabe
     endif
 
     " Yank from the cursor to the end of the line, to be consistent with C and D.
     nnoremap Y y$
+
+    " Visual shifting (does not exit Visual mode)
+    vnoremap < <gv
+    vnoremap > >gv
+    nmap gV `[v`]
 
     " Code folding options
     nmap <leader>f0 :set foldlevel=0<CR>
@@ -289,13 +347,8 @@
 
     " Shortcuts
     " Change Working Directory to that of the current file
-    cmap cwd lcd %:p:h
-    cmap cd. lcd %:p:h
-
-    " Visual shifting (does not exit Visual mode)
-    vnoremap < <gv
-    vnoremap > >gv
-    nmap gV `[v`]
+    "cmap cwd lcd %:p:h
+    "cmap cd. lcd %:p:h
 
     " Fix home and end keybindings for screen, particularly on mac
     " - for some reason this fixes the arrow keys too. huh.
@@ -331,6 +384,30 @@
 " }
 
 " Plugins {
+    " CScope {
+        if has("cscope")
+            " add any cscope database in current directory
+"            if filereadable("cscope.out")
+"                cs add cscope.out  
+"            " else add the database pointed to by environment variable 
+"            elseif $CSCOPE_DB != ""
+"                cs add $CSCOPE_DB
+"            else
+"                cs add ~/workrepos/farm-mobile/cscope.out
+"            endif
+			cs add /Users/vcutten/workrepos/farm-mobile/.git/cscope.out
+            " show msg when any other cscope db added
+            set cscopeverbose  
+            set cscopequickfix=s-,c-,d-,i-,t-,e-,g-
+            " search tag files first
+            set csto=1
+            nmap <leader>s :cs find s <C-R>=expand("<cword>")<CR><CR>
+        endif
+    " }
+
+    " Buffalo {
+        let buffalo_autoaccept=1
+    " }
 
     " PIV {
         let g:DisableAutoPHPFolding = 0
@@ -343,32 +420,33 @@
     " }
 
     " OmniComplete {
-        if has("autocmd") && exists("+omnifunc")
-            autocmd Filetype *
-                \if &omnifunc == "" |
-                \setlocal omnifunc=syntaxcomplete#Complete |
-                \endif
-        endif
+
+    "    if has("autocmd") && exists("+omnifunc")
+    "        autocmd Filetype *
+    "            \if &omnifunc == "" |
+    "            \setlocal omnifunc=syntaxcomplete#Complete |
+    "            \endif
+    "    endif
 
         hi Pmenu  guifg=#000000 guibg=#F8F8F8 ctermfg=black ctermbg=Lightgray
         hi PmenuSbar  guifg=#8A95A7 guibg=#F8F8F8 gui=NONE ctermfg=darkcyan ctermbg=lightgray cterm=NONE
         hi PmenuThumb  guifg=#F8F8F8 guibg=#8A95A7 gui=NONE ctermfg=lightgray ctermbg=darkcyan cterm=NONE
 
-        " Some convenient mappings
-        inoremap <expr> <Esc>      pumvisible() ? "\<C-e>" : "\<Esc>"
-        inoremap <expr> <CR>       pumvisible() ? "\<C-y>" : "\<CR>"
-        inoremap <expr> <Down>     pumvisible() ? "\<C-n>" : "\<Down>"
-        inoremap <expr> <Up>       pumvisible() ? "\<C-p>" : "\<Up>"
-        inoremap <expr> <C-d>      pumvisible() ? "\<PageDown>\<C-p>\<C-n>" : "\<C-d>"
-        inoremap <expr> <C-u>      pumvisible() ? "\<PageUp>\<C-p>\<C-n>" : "\<C-u>"
+    "    " Some convenient mappings
+    "    inoremap <expr> <Esc>      pumvisible() ? "\<C-e>" : "\<Esc>"
+    "    inoremap <expr> <CR>       pumvisible() ? "\<C-y>" : "\<CR>"
+    "    inoremap <expr> <Down>     pumvisible() ? "\<C-n>" : "\<Down>"
+    "    inoremap <expr> <Up>       pumvisible() ? "\<C-p>" : "\<Up>"
+    "    inoremap <expr> <C-d>      pumvisible() ? "\<PageDown>\<C-p>\<C-n>" : "\<C-d>"
+    "    inoremap <expr> <C-u>      pumvisible() ? "\<PageUp>\<C-p>\<C-n>" : "\<C-u>"
 
-        " Automatically open and close the popup menu / preview window
-        au CursorMovedI,InsertLeave * if pumvisible() == 0|silent! pclose|endif
-        set completeopt=menu,preview,longest
+    "    " Automatically open and close the popup menu / preview window
+    "    au CursorMovedI,InsertLeave * if pumvisible() == 0|silent! pclose|endif
+    "    set completeopt=menu,preview,longest
     " }
 
     " Ctags {
-        set tags=./tags;/,~/.vimtags
+    "   set tags=./tags;/,~/.vimtags
     " }
 
     " AutoCloseTag {
@@ -383,19 +461,19 @@
         let g:snips_author = 'Steve Francia <steve.francia@gmail.com>'
     " }
 
-    " NerdTree {
-        map <C-e> :NERDTreeToggle<CR>:NERDTreeMirror<CR>
-        map <leader>e :NERDTreeFind<CR>
-        nmap <leader>nt :NERDTreeFind<CR>
 
-        let NERDTreeShowBookmarks=1
-        let NERDTreeIgnore=['\.pyc', '\~$', '\.swo$', '\.swp$', '\.git', '\.hg', '\.svn', '\.bzr']
-        let NERDTreeChDirMode=0
-        let NERDTreeQuitOnOpen=1
-        let NERDTreeMouseMode=2
-        let NERDTreeShowHidden=1
-        let NERDTreeKeepTreeInNewTab=1
-        let g:nerdtree_tabs_open_on_gui_startup=0
+    " NerdTree {
+    "    map <C-e> :NERDTreeToggle<CR>:NERDTreeMirror<CR>
+    "    map <leader>e :NERDTreeFind<CR>
+    "    nmap <leader>nt :NERDTreeFind<CR>
+    "    let NERDTreeShowBookmarks=1
+    "    let NERDTreeIgnore=['\.pyc', '\~$', '\.swo$', '\.swp$', '\.git', '\.hg', '\.svn', '\.bzr']
+    "    let NERDTreeChDirMode=0
+    "    let NERDTreeQuitOnOpen=1
+    "    let NERDTreeMouseMode=2
+    "    let NERDTreeShowHidden=1
+    "    let NERDTreeKeepTreeInNewTab=1
+    "    let g:nerdtree_tabs_open_on_gui_startup=0
     " }
 
     " Tabularize {
@@ -407,6 +485,8 @@
         vmap <Leader>a: :Tabularize /:<CR>
         nmap <Leader>a:: :Tabularize /:\zs<CR>
         vmap <Leader>a:: :Tabularize /:\zs<CR>
+        nmap <Leader>a{ :Tabularize /{<CR>
+        vmap <Leader>a{ :Tabularize /{<CR>
         nmap <Leader>a, :Tabularize /,<CR>
         vmap <Leader>a, :Tabularize /,<CR>
         nmap <Leader>a<Bar> :Tabularize /<Bar><CR>
@@ -451,17 +531,69 @@
     "}
 
     " TagBar {
-        nnoremap <silent> <leader>tt :TagbarToggle<CR>
+        nnoremap <F1> :TagbarToggle<CR>
+        "nnoremap <silent> <leader>tt :TagbarToggle<CR>
+        let g:tagbar_type_actionscript = {
+                    \ 'ctagstype' : 'flex',
+                    \ 'kinds' : [
+                    \ 'f:functions',
+                    \ 'c:classes',
+                    \ 'm:methods',
+                    \ 'p:properties',
+                    \ 'v:global variables',
+                    \ 'x:mxtags'
+                    \ ]
+                    \ }
+        let g:tagbar_type_mxml = {
+                    \ 'ctagstype' : 'flex',
+                    \ 'kinds' : [
+                    \ 'f:functions',
+                    \ 'c:classes',
+                    \ 'm:methods',
+                    \ 'p:properties',
+                    \ 'v:global variables',
+                    \ 'x:mxtags'
+                    \ ]
+                    \ }
     "}
 
     " PythonMode {
-    " Disable if python support not present
+		" Disable if python support not present
         if !has('python')
             let g:pymode = 1
         endif
     " }
 
     " Fugitive {
+		function! PirateDiffRight()
+			if ( match( bufname("%"), '//2' ) != -1 )
+				" On TARGET Buffer
+				echo "Pending"
+			elseif ( match( bufname("%"), '//3' ) != -1 )
+				" On REMOTE Buffer
+				echo "No Where to Put"
+			else
+				" On LOCAL Buffer
+				:diffget //3 | diffupdate
+			endif
+		endfunc
+		function! PirateDiffLeft()
+			if ( match( bufname("%"), '//2' ) != -1 )
+				" On TARGET Buffer
+				echo "Pending"
+			elseif ( match( bufname("%"), '//3' ) != -1 )
+				" On REMOTE Buffer
+				echo "No Where to Put"
+			else
+				" On LOCAL Buffer
+				:diffget //2  | diffupdate
+			endif
+		endfunc
+		" Quick commands to run diff put/obtain
+		" Obtain diff from left side
+		nnoremap <leader>dh call :PirateDiffLeft()<CR>
+		nnoremap <leader>dl call :PirateDiffRight()<CR>
+		" Obtain diff from right side
         nnoremap <silent> <leader>gs :Gstatus<CR>
         nnoremap <silent> <leader>gd :Gdiff<CR>
         nnoremap <silent> <leader>gc :Gcommit<CR>
@@ -610,63 +742,6 @@
     com! -nargs=+         UnBundle
     \ call UnBundle(<args>)
     " }
-
-    " Initialize directories {
-    function! InitializeDirectories()
-        let parent = $HOME
-        let prefix = 'vim'
-        let dir_list = {
-                    \ 'backup': 'backupdir',
-                    \ 'views': 'viewdir',
-                    \ 'swap': 'directory' }
-
-        if has('persistent_undo')
-            let dir_list['undo'] = 'undodir'
-        endif
-
-        " To specify a different directory in which to place the vimbackup,
-        " vimviews, vimundo, and vimswap files/directories, add the following to
-        " your .vimrc.local file:
-        "   let g:spf13_consolidated_directory = <full path to desired directory>
-        "   eg: let g:spf13_consolidated_directory = $HOME . '/.vim/'
-        if exists('g:spf13_consolidated_directory')
-            let common_dir = g:spf13_consolidated_directory . prefix
-        else
-            let common_dir = parent . '/.' . prefix
-        endif
-
-        for [dirname, settingname] in items(dir_list)
-            let directory = common_dir . dirname . '/'
-            if exists("*mkdir")
-                if !isdirectory(directory)
-                    call mkdir(directory)
-                endif
-            endif
-            if !isdirectory(directory)
-                echo "Warning: Unable to create backup directory: " . directory
-                echo "Try: mkdir -p " . directory
-            else
-                let directory = substitute(directory, " ", "\\\\ ", "g")
-                exec "set " . settingname . "=" . directory
-            endif
-        endfor
-    endfunction
-    " }
-
-    " Initialize NERDTree as needed {
-    function! NERDTreeInitAsNeeded()
-        redir => bufoutput
-        buffers!
-        redir END
-        let idx = stridx(bufoutput, "NERD_tree")
-        if idx > -1
-            NERDTreeMirror
-            NERDTreeFind
-            wincmd l
-        endif
-    endfunction
-    " }
-
     " Strip whitespace {
     function! StripTrailingWhitespace()
         " To disable the stripping of whitespace, add the following to your
@@ -688,18 +763,6 @@
 
 " }
 
-" Use fork vimrc if available {
-    if filereadable(expand("~/.vimrc.fork"))
-        source ~/.vimrc.fork
-    endif
-" }
-
-" Use local vimrc if available {
-    if filereadable(expand("~/.vimrc.local"))
-        source ~/.vimrc.local
-    endif
-" }
-
 " Use local gvimrc if available and gui is running {
     if has('gui_running')
         if filereadable(expand("~/.gvimrc.local"))
@@ -708,6 +771,3 @@
     endif
 " }
 
-" Finish local initializations {
-    call InitializeDirectories()
-" }
