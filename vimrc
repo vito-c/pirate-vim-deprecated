@@ -145,7 +145,6 @@
 " }
 
 " Custom Functions {
-    " TODO: add toggles quickfix window
     " TODO: automatically open quickfix window cscope, make etc
     " TODO: set shift enter in quickfix to keep you in the window and take u
     " to the next match in the list
@@ -157,6 +156,33 @@
 	" TODO: get vim hearders searchable via tags
 	" TODO: <F5> needs to force refresh tags and cscope
 	" TODO: Fugitve doesn't do it's thing
+
+	function! GetBufferList()
+		redir =>buflist
+		silent! ls
+		redir END
+		return buflist
+	endfunction
+
+	function! ToggleList(bufname, pfx)
+		let buflist = GetBufferList()
+		for bufnum in map(filter(split(buflist, '\n'), 'v:val =~ "'.a:bufname.'"'), 'str2nr(matchstr(v:val, "\\d\\+"))')
+			if bufwinnr(bufnum) != -1
+				exec(a:pfx.'close')
+				return
+			endif
+		endfor
+		if a:pfx == 'l' && len(getloclist(0)) == 0
+			echohl ErrorMsg
+			echo "Location List is Empty."
+			return
+		endif
+		let winnr = winnr()
+		exec(a:pfx.'open')
+		if winnr() != winnr
+			wincmd p
+		endif
+	endfunction
 
     " Search for selected text, forwards or backwards.
     vnoremap <silent> * :<C-U>
@@ -258,6 +284,9 @@
 
 " Key (re)Mappings {
     let mapleader = ' '
+
+	"nmap <silent> <leader>o :call ToggleList("Location List", 'l')<CR>
+	nmap <silent> <leader>o :call ToggleList("Quickfix List", 'c')<CR>
     nnoremap <leader>no :call NumberOff()<CR>
     nnoremap <leader>nn :call NumberToggle()<CR>
     nnoremap <leader>nr :set relativenumber<CR>
@@ -287,8 +316,6 @@
     map <leader>w- <C-W>-
     map <leader>wc <C-W>c
     map <leader>wo <C-W>o
-    map <leader>c :cclose<CR>
-    map <leader>o :copen<CR>
  
     " Wrapped lines goes down/up to next row, rather than next line in file.
     nnoremap j gj
@@ -374,7 +401,7 @@
     " Map <Leader>ff to display all lines with keyword under cursor
     " and ask which one to jump to
     "nmap <Leader>ff [I:let nr = input("Which one: ")<Bar>exe "normal " . nr ."[\t"<CR>
-	nmap <leader>ff :vimgrep <C-R>=expand("<cword>")<CR> %<CR>
+	nmap <leader>ff :vimgrep <C-R>=expand("<cword>")<CR> % <Bar> copen<CR>
 
     " Easier horizontal scrolling
     map zl zL
@@ -400,7 +427,7 @@
             set cscopequickfix=s-,c-,d-,i-,t-,e-,g-
             " search tag files first
             set csto=1
-            nmap <leader>s :cs find s <C-R>=expand("<cword>")<CR><CR>
+            nmap <leader>s :cs find s <C-R>=expand("<cword>")<CR><Bar>copen<CR>
         endif
     " }
 
