@@ -163,6 +163,7 @@
 		return buflist
 	endfunction
 
+	" TODO: if in COMMIT_EDITMSG should you save quit on toggle? or ZZ?
 	function! ToggleBuffer(bufname, pfx)
 		let buflist = GetBufferList()
 		"let pat = '"'.a:bufname.'"' | echo filter(split('abc keep also def'), 'pat =~ v:val' )
@@ -313,7 +314,7 @@
     noremap ` '
 
     inoremap <C-E> <ESC>A
-    inoremap <C-R> <ESC>mcA;<ESC>`ca
+    "inoremap <C-;> <ESC>mcA;<ESC>`ca
     map <leader>; mcA;<ESC>'c
 
     " Easier moving in tabs and windows
@@ -417,6 +418,8 @@
     " and ask which one to jump to
     "nmap <Leader>ff [I:let nr = input("Which one: ")<Bar>exe "normal " . nr ."[\t"<CR>
 	nmap <leader>ff :vimgrep <C-R>=expand("<cword>")<CR> % <Bar> copen<CR>
+	nmap <leader>fg :Ack <C-R>=expand("<cword>")<CR><CR>
+	nmap <leader>fc :Ack --csharp <C-R>=expand("<cword>")<CR><CR>
 
     " Easier horizontal scrolling
     map zl zL
@@ -442,7 +445,7 @@
             set cscopequickfix=s-,c-,d-,i-,t-,e-,g-
             " search tag files first
             set csto=1
-            nmap <leader>s :cs find s <C-R>=expand("<cword>")<CR><Bar>copen<CR>
+            nmap <leader>s :execute 'cs find s <C-R>=expand("<cword>")<CR>' <Bar> copen<CR>
         endif
     " }
 
@@ -540,10 +543,6 @@
         nmap <leader>ss :SessionSave<CR>
     " }
 
-    " Buffer explorer {
-        nmap <leader>b :BufExplorer<CR>
-    " }
-
     " JSON {
         nmap <leader>jt <Esc>:%!python -m json.tool<CR><Esc>:set filetype=json<CR>
     " }
@@ -558,9 +557,14 @@
         let g:ctrlp_working_path_mode = 2
         nnoremap <silent> <D-t> :CtrlP<CR>
         nnoremap <silent> <D-r> :CtrlPMRU<CR>
-        let g:ctrlp_custom_ignore = {
-            \ 'dir':  '\.git$\|\.hg$\|\.svn$',
-            \ 'file': '\.exe$\|\.so$\|\.dll$' }
+		set wildignore+=*/tmp/*,*.so,*.swp,*.zip,*.meta,*.prefab,*.png,*.jpg,*~
+		let g:ctrlp_custom_ignore = {
+		  \ 'dir':  '\v[\/]\.(git|hg|svn|neocon|vimswap|vimundo|vimgolf)$',
+		  \ 'file': '\v\.(exe|so|dll|meta|prefab|sln|jpg|png)$'
+		  \ }
+"        let g:ctrlp_custom_ignore = {
+"            \ 'dir':  '\.git$\|\.hg$\|\.svn$',
+"            \ 'file': '\.exe$\|\.so$\|\.dll$' }
 
         let g:ctrlp_user_command = {
             \ 'types': {
