@@ -2,7 +2,6 @@
 *.pyc
 *._*
 *.*~
-.vim/
-vim/*
-vim
-vim/bundle/vundle
+vim/bundle
+*~
+vim/view
