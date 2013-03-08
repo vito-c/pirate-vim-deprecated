@@ -149,20 +149,33 @@
     " TODO: set shift enter in quickfix to keep you in the window and take u
     " to the next match in the list
     " TODO: also shift enter in full command mode would be cool
-    " TODO: fix neocomplcache so that you can press ^N ^[ and not ^N<CR>^[
     " TODO: get make functionality for c# unity project
     " TODO: install pyclewn and get functionality working
     " TODO: command line tab should complete and control space should list
 	" TODO: get vim hearders searchable via tags
 	" TODO: <F5> needs to force refresh tags and cscope
 	" TODO: Fugitve doesn't do it's thing
-	" Test
 
 	function! GetBufferList()
 		redir =>buflist
 		silent! ls
 		redir END
 		return buflist
+	endfunction
+
+	function! ToggleBuffer(bufname, pfx)
+		let buflist = GetBufferList()
+		for bufnum in map(filter(split(buflist, '\n'), 'v:val =~ "'.a:bufname.'"'), 'str2nr(matchstr(v:val, "\\d\\+"))')
+			if bufwinnr(bufnum) != -1
+				exec('bd '.a:bufname)
+				return
+			endif
+		endfor
+		" Test Prefix and open your buffer here
+		if a:pfx == 'g'
+			:Gstatus
+			return
+		endif
 	endfunction
 
 	function! ToggleList(bufname, pfx)
@@ -619,9 +632,10 @@
 		" Quick commands to run diff put/obtain
 		" Obtain diff from left side
 		nnoremap <leader>dh call :PirateDiffLeft()<CR>
-		nnoremap <leader>dl call :PirateDiffRight()<CR>
 		" Obtain diff from right side
-        nnoremap <silent> <leader>gs :Gstatus<CR>
+		nnoremap <leader>dl call :PirateDiffRight()<CR>
+
+		nnoremap <silent> <leader>gg :call ToggleBuffer(".git/index", 'g')<CR>
         nnoremap <silent> <leader>gd :Gdiff<CR>
         nnoremap <silent> <leader>gc :Gcommit<CR>
         nnoremap <silent> <leader>gb :Gblame<CR>
