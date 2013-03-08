@@ -3,4 +3,6 @@
 *._*
 *.*~
 .vim/
-vim/
+vim/*
+vim
+vim/bundle/vundle
