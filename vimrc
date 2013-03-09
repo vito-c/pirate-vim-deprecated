@@ -237,7 +237,8 @@
         "let g:solarized_termtrans=1
         "let g:solarized_contrast="high"
         "let g:solarized_visibility="high"
-    color molokai                    " Load a colorscheme
+    "color molokai                    " Load a colorscheme
+    color default "Load a colorscheme
     set tabpagemax=15               " Only show 15 tabs
     set showmode                    " Display the current mode
     set cursorline                  " Highlight current line
