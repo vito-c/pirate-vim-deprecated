@@ -367,12 +367,13 @@ getFBUser(){
 	100003778250086
 }
 
+# TODO: Fix this
 updateStageUser(){
 	name=$1 password=$2 fbid=$3
 
 	GRAPH=https://graph.facebook.com;
-	APP_FID="351892064829208";
-	APP_SEC="4880d0909072e241f6a2f7bce68af707";
+	APP_FID="XX"
+	APP_SEC="YY"
 	ACC_TKN=$(curl -F type=client_cred -F client_id=$APP_FID -F client_secret=$APP_SEC -F grant_type=client_credentials $GRAPH/oauth/access_token | sed -nE 's|access_token=(.*)$|\1|p');
 	echo "curl -F "password=$password" -F "name=$name" $GRAPH/$fbid?access_token=$ACC_TKN";
 	curl -F "name=$name" -F "password=$password" $GRAPH/$fbid?access_token=$ACC_TKN;
@@ -381,8 +382,8 @@ updateStageUser(){
 # Get test user login
 getRoboDomo(){
 	GRAPH=https://graph.facebook.com;
-	APP_FID="288348037857846";
-	APP_SEC="2cf058188cf3444e914325ac6fc42cd4";
+	APP_FID="$1"
+	APP_SEC="$2"
 	FB_ID="100003999105669"
 	ACC_TKN=$(curl -F type=client_cred -F client_id=$APP_FID -F client_secret=$APP_SEC -F grant_type=client_credentials $GRAPH/oauth/access_token | sed -nE 's|access_token=(.*)$|\1|p');
 	#echo "curl -F "password=$password" -F "name=$name" $GRAPH/$fbid?access_token=$ACC_TKN";
@@ -400,8 +401,8 @@ updateDevUser(){
 	name=$1 password=$2 fbid=$3
 
 	GRAPH=https://graph.facebook.com;
-	APP_FID="288348037857846";
-	APP_SEC="2cf058188cf3444e914325ac6fc42cd4";
+	APP_FID="$1"
+	APP_SEC="$2"
 	ACC_TKN=$(curl -F type=client_cred -F client_id=$APP_FID -F client_secret=$APP_SEC -F grant_type=client_credentials $GRAPH/oauth/access_token | sed -nE 's|access_token=(.*)$|\1|p');
 	echo "curl -F "password=$password" -F "name=$name" $GRAPH/$fbid?access_token=$ACC_TKN";
 	curl -F "name=$name" -F "password=$password" $GRAPH/$fbid?access_token=$ACC_TKN;

@@ -36,6 +36,13 @@
 " 
 " }
 
+" Stuff to checkout
+" rainbow parenthesis
+
+"Experimential
+" Fix indenting of html files
+autocmd FileType html setlocal indentkeys-=*<Return>
+
 " Environment {
 
     " Basics {
@@ -89,8 +96,13 @@
     scriptencoding utf-8
 
     if has("autocmd")
-      " Source the vimrc file after saving it
-      autocmd bufwritepost .vimrc source $MYVIMRC
+		" Source the vimrc file after saving it
+		autocmd bufwritepost .vimrc source $MYVIMRC
+		autocmd bufwritepost vimrc sourc $MYVIMRC
+		au BufReadPost quickfix setlocal modifiable
+		" Map ✠ (U+2720) to <Esc> as <S-CR> is mapped to ✠ in iTerm2.
+		autocmd CmdwinEnter * map <buffer> ✠ <CR>q:
+		au BufReadPost quickfix :noremap <buffer> ✠ :execute 'cc '.line(".") <Bar> cclose <Bar> copen<CR>
     endif
 
     if has ('x') && has ('gui') " On Linux use + register for copy-paste
@@ -145,9 +157,7 @@
 " }
 
 " Custom Functions {
-    " TODO: automatically open quickfix window cscope, make etc
-    " TODO: set shift enter in quickfix to keep you in the window and take u
-    " to the next match in the list
+    " TODO: automatically open quickfix window cscope, make etc, vimgrep
     " TODO: also shift enter in full command mode would be cool
     " TODO: get make functionality for c# unity project
     " TODO: install pyclewn and get functionality working
@@ -155,6 +165,14 @@
 	" TODO: get vim hearders searchable via tags
 	" TODO: <F5> needs to force refresh tags and cscope
 	" TODO: Fugitve doesn't do it's thing
+	
+	function! RefreshTags()
+		if filereadable(".git/hooks/ctags")
+			:!.git/hooks/ctags
+		else 
+			echo "Failed to find tag generator"
+		endif
+	endfunction
 
 	function! GetBufferList()
 		redir =>buflist
@@ -206,7 +224,7 @@
                 \gvy/<C-R><C-R>=substitute(
                 \escape(@", '/\.*$^~['), '\_s\+', '\\_s\\+', 'g')<CR><CR>
                 \gV:call setreg('"', old_reg, old_regtype)<CR>
-    vnoremap <silent> # :<C-U>
+    vnoremap silent> # :<C-U>
                 \let old_reg=getreg('"')<Bar>let old_regtype=getregtype('"')<CR>
                 \gvy?<C-R><C-R>=substitute(
                 \escape(@", '?\.*$^~['), '\_s\+', '\\_s\\+', 'g')<CR><CR>
@@ -219,6 +237,7 @@
             set number
         endif
     endfunc
+
     function! NumberOff()
         if(&nu == 1)
             set nonu
@@ -300,6 +319,8 @@
 
 " Key (re)Mappings {
     let mapleader = ' '
+	
+	noremap <F5> :call RefreshTags()<CR>
 
 	"nmap <silent> <leader>o :call ToggleList("Location List", 'l')<CR>
 	nmap <silent> <leader>o :call ToggleList("Quickfix List", 'c')<CR>
@@ -312,8 +333,13 @@
     " Set marks correctly
     noremap ' `
     noremap ` '
+	noremap g' g`
+	noremap g` g'
 
     inoremap <C-E> <ESC>A
+    inoremap <C-B> <ESC>I
+	
+	
     "inoremap <C-;> <ESC>mcA;<ESC>`ca
     map <leader>; mcA;<ESC>'c
 
@@ -369,7 +395,7 @@
     " Visual shifting (does not exit Visual mode)
     vnoremap < <gv
     vnoremap > >gv
-    nmap gV `[v`]
+    "nmap gV `[v`]
 
     " Code folding options
     nmap <leader>f0 :set foldlevel=0<CR>
@@ -404,12 +430,12 @@
     " Some helpers to edit mode
     " http://vimcasts.org/e/14
     cnoremap %% <C-R>=expand('%:h').'/'<cr>
-    map <leader>f :find
-    map <leader>ew :e %%
-    map <leader>es :sp %%
-    map <leader>ev :vsp %%
-    map <leader>et :tabe %%
-    nmap <leader>v :tabedit $MYVIMRC<CR>
+    map <leader>ef :<C-U>find
+    map <leader>ew :<C-U>e %%
+    map <leader>es :<C-U>sp %%
+    map <leader>ev :<C-U>vsp %%
+    map <leader>et :<C-U>tabe %%
+    map <leader>v :<C-U>tabedit $MYVIMRC<CR>
 
     " Adjust viewports to the same size
     map <Leader>= <C-w>=
@@ -417,9 +443,24 @@
     " Map <Leader>ff to display all lines with keyword under cursor
     " and ask which one to jump to
     "nmap <Leader>ff [I:let nr = input("Which one: ")<Bar>exe "normal " . nr ."[\t"<CR>
-	nmap <leader>ff :vimgrep <C-R>=expand("<cword>")<CR> % <Bar> copen<CR>
-	nmap <leader>fg :Ack <C-R>=expand("<cword>")<CR><CR>
-	nmap <leader>fc :Ack --csharp <C-R>=expand("<cword>")<CR><CR>
+    " Search for selected text, forwards or backwards.
+    vnoremap <silent> * :<C-U>
+                \let old_reg=getreg('"')<Bar>let old_regtype=getregtype('"')<CR>
+                \gvy/<C-R><C-R>=substitute(
+                \escape(@", '/\.*$^~['), '\_s\+', '\\_s\\+', 'g')<CR><CR>
+                \gV:call setreg('"', old_reg, old_regtype)<CR>
+
+    vnoremap <leader>ff :<C-U>
+                \let old_reg=getreg('"')<Bar>let old_regtype=getregtype('"')<CR>
+                \gvy:vimgrep "<C-R><C-R>=substitute(
+                \escape(@", '/\.*$^~['), '\_s\+', '\\_s\\+', 'g')<CR>" %<CR>
+				\gV:call setreg('"', old_reg, old_regtype)<CR>
+				\:copen<CR>
+
+	nnoremap <leader>ff :vimgrep <C-R>=expand("<cword>")<CR> % <Bar> copen<CR>
+	noremap <leader>fg :Ack <C-R>=expand("<cword>")<CR><CR>
+	noremap <leader>fc :Ack --csharp <C-R>=expand("<cword>")<CR><CR>
+	noremap <leader><leader>t :echo "<C-R>=expand("<cword>")<CR>"<CR>
 
     " Easier horizontal scrolling
     map zl zL
@@ -439,13 +480,16 @@
 "            else
 "                cs add ~/workrepos/farm-mobile/cscope.out
 "            endif
-			cs add /Users/vcutten/workrepos/farm-mobile/.git/cscope.out
+			if !exists("cscope_test_loaded")
+				let cscope_test_loaded = 1
+				cs add /Users/vcutten/workrepos/farm-mobile/.git/cscope.out
+			endif
             " show msg when any other cscope db added
             set cscopeverbose  
             set cscopequickfix=s-,c-,d-,i-,t-,e-,g-
             " search tag files first
             set csto=1
-            nmap <leader>s :execute 'cs find s <C-R>=expand("<cword>")<CR>' <Bar> copen<CR>
+            nmap <leader>fs :execute 'cs find s <C-R>=expand("<cword>")<CR>' <Bar> copen<CR>
         endif
     " }
 
@@ -562,17 +606,14 @@
 		  \ 'dir':  '\v[\/]\.(git|hg|svn|neocon|vimswap|vimundo|vimgolf)$',
 		  \ 'file': '\v\.(exe|so|dll|meta|prefab|sln|jpg|png)$'
 		  \ }
-"        let g:ctrlp_custom_ignore = {
-"            \ 'dir':  '\.git$\|\.hg$\|\.svn$',
-"            \ 'file': '\.exe$\|\.so$\|\.dll$' }
 
-        let g:ctrlp_user_command = {
-            \ 'types': {
-                \ 1: ['.git', 'cd %s && git ls-files . --cached --exclude-standard --others'],
-                \ 2: ['.hg', 'hg --cwd %s locate -I .'],
-            \ },
-            \ 'fallback': 'find %s -type f'
-        \ }
+      "  let g:ctrlp_user_command = {
+      "      \ 'types': {
+      "          \ 1: ['.git', 'cd %s && git ls-files . --cached --exclude-standard --others'],
+      "          \ 2: ['.hg', 'hg --cwd %s locate -I .'],
+      "      \ },
+      "      \ 'fallback': 'find %s -type f'
+      "  \ }
     "}
 
     " TagBar {
