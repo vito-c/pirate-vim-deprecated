@@ -85,7 +85,7 @@ autocmd FileType html setlocal indentkeys-=*<Return>
     " }
 
 
-    set background=dark         " Assume a dark background
+    set background=light         " Assume a dark background
     if !has('gui')
         "set term=$TERM          " Make arrow and other keys work
     endif
@@ -249,13 +249,6 @@ autocmd FileType html setlocal indentkeys-=*<Return>
 
 " Vim UI {
 
-    "if filereadable(expand("~/.vim/bundle/vim-colors-solarized/colors/solarized.vim"))
-        "let g:solarized_termcolors=256
-        "color solarized                 " Load a colorscheme
-    "endif
-        "let g:solarized_termtrans=1
-        "let g:solarized_contrast="high"
-        "let g:solarized_visibility="high"
     color molokai                    " Load a colorscheme
     set tabpagemax=15               " Only show 15 tabs
     set showmode                    " Display the current mode
@@ -506,6 +499,10 @@ autocmd FileType html setlocal indentkeys-=*<Return>
         let g:NERDShutUp=1
         let b:match_ignorecase = 1
     " }
+	
+	" Gist {
+		let g:gist_detect_filetype = 1
+	" }
 
     " OmniComplete {
 

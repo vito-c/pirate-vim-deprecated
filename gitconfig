@@ -45,3 +45,5 @@
 	templatedir = ~/.git_template
 [hub]
 	host = github-ca.corp.zynga.com
+[github]
+	user = vito-c
