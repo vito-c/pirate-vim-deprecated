@@ -702,7 +702,7 @@ autocmd FileType html setlocal indentkeys-=*<Return>
 		" Obtain diff from right side
 		nnoremap <leader>dl call :PirateDiffRight()<CR>
 
-		nnoremap <silent> <leader>gg :call ToggleBuffer('.git/index\\|.git/COMMIT_EDITMSG', 'g')<CR>
+		nnoremap <silent> <leader>gs :call ToggleBuffer('.git/index\\|.git/COMMIT_EDITMSG', 'g')<CR>
         nnoremap <silent> <leader>gd :Gdiff<CR>
         nnoremap <silent> <leader>gc :Gcommit<CR>
         nnoremap <silent> <leader>gb :Gblame<CR>
