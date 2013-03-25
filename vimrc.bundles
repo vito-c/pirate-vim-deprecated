@@ -83,7 +83,7 @@
 	    Bundle 'godlygeek/csapprox'
 	    Bundle 'tpope/vim-unimpaired'
 	    Bundle 'flazz/vim-colorschemes'
-	    Bundle 'mbbill/undotree'
+		Bundle 'sjl/gundo.vim'
 	    Bundle 'Raimondi/vim-buffalo'
 	    Bundle 'tpope/vim-abolish.git'
 
