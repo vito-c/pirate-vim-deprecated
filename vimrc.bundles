@@ -74,7 +74,6 @@
             let g:ackprg = 'ag --nogroup --nocolor --column'
         endif
     " General
-	    Bundle 'altercation/vim-colors-solarized'
 	    Bundle 'spf13/vim-colors'
 	    Bundle 'tpope/vim-surround'
 	    Bundle 'kien/ctrlp.vim'
@@ -84,7 +83,7 @@
 	    Bundle 'godlygeek/csapprox'
 	    Bundle 'tpope/vim-unimpaired'
 	    Bundle 'flazz/vim-colorschemes'
-	    Bundle 'mbbill/undotree'
+		Bundle 'sjl/gundo.vim'
 	    Bundle 'Raimondi/vim-buffalo'
 	    Bundle 'tpope/vim-abolish.git'
 

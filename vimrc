@@ -166,7 +166,33 @@ autocmd FileType html setlocal indentkeys-=*<Return>
 	" TODO: <F5> needs to force refresh tags and cscope
 	" TODO: Fugitve doesn't do it's thing
 	
-	function! RefreshTags()
+	command! -nargs=1 -complete=command -bang Cdo call ArgPopAndRestore( ListFileNames( 'quickfix' ), <f-args> )
+	command! -nargs=1 -complete=command -bang Ldo exe ArgPopAndRestore( ListFileNames( 'loclist' ), <f-args> )
+	"function! WrapList( listName, 
+
+	function! ArgPopAndRestore( exelist, execommand )
+		let current_arglist = argv()
+		exe 'args ' . a:exelist . '| argdo! ' . a:execommand
+		exe 'args ' . join(current_arglist)
+	endfunc
+
+	function! ListFileNames( listName )
+	  " Building a hash ensures we get each buffer only once
+	  let buffer_numbers = {}
+	  if a:listName == 'quickfix' 
+		  for quickfix_item in getqflist()
+			let buffer_numbers[quickfix_item['bufnr']] = bufname(quickfix_item['bufnr'])
+		  endfor
+	  elseif a:listName == 'loclist'
+		  for loclist_item in getloclist()
+			let buffer_numbers[loclist_item['bufnr']] = bufname(loclist_item['bufnr'])
+		  endfor
+	  endif
+	  return join(map(values(buffer_numbers), 'fnameescape(v:val)'))
+	endfunction
+
+	command! -nargs=0 -bar RefreshTags execute RefreshTagsInGitHooks()
+	function! RefreshTagsInGitHooks()
 		if filereadable(".git/hooks/ctags")
 			:!.git/hooks/ctags
 		else 
@@ -256,8 +282,8 @@ autocmd FileType html setlocal indentkeys-=*<Return>
         "let g:solarized_termtrans=1
         "let g:solarized_contrast="high"
         "let g:solarized_visibility="high"
-    "color molokai                    " Load a colorscheme
-    color default "Load a colorscheme
+    color molokai                    " Load a colorscheme
+    "color default "Load a colorscheme
     set tabpagemax=15               " Only show 15 tabs
     set showmode                    " Display the current mode
     set cursorline                  " Highlight current line
@@ -618,7 +644,8 @@ autocmd FileType html setlocal indentkeys-=*<Return>
     "}
 
     " TagBar {
-        nnoremap <F1> :TagbarToggle<CR>
+        "nnoremap <F1> :TagbarToggle<CR>
+		" This is set in ~/.pirate-vim/vim/after/plugin/my_mappings.vim
         "nnoremap <silent> <leader>tt :TagbarToggle<CR>
         let g:tagbar_type_actionscript = {
                     \ 'ctagstype' : 'flex',
