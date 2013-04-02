@@ -101,8 +101,12 @@ autocmd FileType html setlocal indentkeys-=*<Return>
 		autocmd bufwritepost vimrc sourc $MYVIMRC
 		au BufReadPost quickfix setlocal modifiable
 		" Map ✠ (U+2720) to <Esc> as <S-CR> is mapped to ✠ in iTerm2.
-		autocmd CmdwinEnter * map <buffer> ✠ <CR>q:
-		au BufReadPost quickfix :noremap <buffer> ✠ :execute 'cc '.line(".") <Bar> cclose <Bar> copen<CR>
+		if has ('gui')          " On mac and Windows, use * register for copy-paste
+			au BufReadPost quickfix :noremap <buffer> <S-CR> :execute 'cc '.line(".") <Bar> cclose <Bar> copen <Bar> wincmd J <CR>
+		else
+			autocmd CmdwinEnter * map <buffer> ✠ <CR>q:
+			au BufReadPost quickfix :noremap <buffer> ✠ :execute 'cc '.line(".") <Bar> cclose <Bar> copen <Bar> wincmd J<CR>
+		endif
     endif
 
     if has ('x') && has ('gui') " On Linux use + register for copy-paste
@@ -239,8 +243,9 @@ autocmd FileType html setlocal indentkeys-=*<Return>
 		endif
 		let winnr = winnr()
 		exec(a:pfx.'open')
+		wincmd J
 		if winnr() != winnr
-			wincmd p
+			wincmd J
 		endif
 	endfunction
 
@@ -477,7 +482,7 @@ autocmd FileType html setlocal indentkeys-=*<Return>
 				\gV:call setreg('"', old_reg, old_regtype)<CR>
 				\:copen<CR>
 
-	nnoremap <leader>ff :vimgrep <C-R>=expand("<cword>")<CR> % <Bar> copen<CR>
+	nnoremap <leader>ff :vimgrep <C-R>=expand("<cword>")<CR> % <Bar> copen <Bar> wincmd J<CR>
 	noremap <leader>fg :Ack <C-R>=expand("<cword>")<CR><CR>
 	noremap <leader>fc :Ack --csharp <C-R>=expand("<cword>")<CR><CR>
 	noremap <leader><leader>t :echo "<C-R>=expand("<cword>")<CR>"<CR>
@@ -509,7 +514,7 @@ autocmd FileType html setlocal indentkeys-=*<Return>
             set cscopequickfix=s-,c-,d-,i-,t-,e-,g-
             " search tag files first
             set csto=1
-            nmap <leader>fs :execute 'cs find s <C-R>=expand("<cword>")<CR>' <Bar> copen<CR>
+            nmap <leader>fs :execute 'cs find s <C-R>=expand("<cword>")<CR>' <Bar> copen <Bar> wincmd J <CR>
         endif
     " }
 
@@ -799,7 +804,7 @@ autocmd FileType html setlocal indentkeys-=*<Return>
     " }
 
     " UndoTree {
-        nnoremap <Leader>u :UndotreeToggle<CR>
+        nnoremap <Leader>u :GundoToggle<CR>
         " If undotree is opened, it is likely one wants to interact with it.
         let g:undotree_SetFocusWhenToggle=1
     " }
