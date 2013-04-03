@@ -101,8 +101,10 @@ autocmd FileType html setlocal indentkeys-=*<Return>
 		autocmd bufwritepost vimrc sourc $MYVIMRC
 		au BufReadPost quickfix setlocal modifiable
 		" Map ✠ (U+2720) to <Esc> as <S-CR> is mapped to ✠ in iTerm2.
-		autocmd CmdwinEnter * map <buffer> ✠ <CR>q:
-		au BufReadPost quickfix :noremap <buffer> ✠ :execute 'cc '.line(".") <Bar> cclose <Bar> copen<CR>
+		autocmd CmdwinEnter * map <buffer> ☠ <CR>q:
+		au BufReadPost quickfix :noremap <buffer> ☠ :execute 'cc '.line(".") <Bar> cclose <Bar> copen<CR>
+		au BufReadPost quickfix :noremap <buffer> <S-CR> :execute 'cc '.line(".") <Bar> cclose <Bar> copen<CR>
+		autocmd CmdwinEnter * map <buffer> <S-CR> <CR>q:
     endif
 
     if has ('x') && has ('gui') " On Linux use + register for copy-paste
