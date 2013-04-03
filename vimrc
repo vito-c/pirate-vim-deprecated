@@ -100,13 +100,11 @@ autocmd FileType html setlocal indentkeys-=*<Return>
 		autocmd bufwritepost .vimrc source $MYVIMRC
 		autocmd bufwritepost vimrc sourc $MYVIMRC
 		au BufReadPost quickfix setlocal modifiable
-		" Map ✠ (U+2720) to <Esc> as <S-CR> is mapped to ✠ in iTerm2.
-		if has ('gui')          " On mac and Windows, use * register for copy-paste
-			au BufReadPost quickfix :noremap <buffer> <S-CR> :execute 'cc '.line(".") <Bar> cclose <Bar> copen <Bar> wincmd J <CR>
-		else
-			autocmd CmdwinEnter * map <buffer> ✠ <CR>q:
-			au BufReadPost quickfix :noremap <buffer> ✠ :execute 'cc '.line(".") <Bar> cclose <Bar> copen <Bar> wincmd J<CR>
-		endif
+		" Map ☠ (U+2720) to <Esc> as <S-CR> is mapped to ☠ in iTerm2.
+		"if has ('gui')          " On mac and Windows, use * register for copy-paste
+		au BufReadPost quickfix :noremap <buffer> <S-CR> :execute 'cc '.line(".") <Bar> cclose <Bar> copen <Bar> wincmd J <CR>
+		autocmd CmdwinEnter * map <buffer> ☠ <CR>q:
+		au BufReadPost quickfix :noremap <buffer> ☠ :execute 'cc '.line(".") <Bar> cclose <Bar> copen <Bar> wincmd J<CR>
     endif
 
     if has ('x') && has ('gui') " On Linux use + register for copy-paste
