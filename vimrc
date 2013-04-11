@@ -81,7 +81,7 @@ autocmd FileType html setlocal indentkeys-=*<Return>
 
     "Setup Shell {
         " custom shell options
-        set shell=/usr/local/bin/bash\ --rcfile\ ~/.pirate-vim/vim-bashrc\ -i
+        "set shell=/usr/local/bin/bash\ --rcfile\ ~/.pirate-vim/vim-bashrc\ -i
     " }
 
 
@@ -102,7 +102,9 @@ autocmd FileType html setlocal indentkeys-=*<Return>
 		au BufReadPost quickfix setlocal modifiable
 		" Map ☠ (U+???) to <Esc> as <S-CR> is mapped to ☠ in iTerm2.
 		"if has ('gui')          " On mac and Windows, use * register for copy-paste
-		au BufReadPost quickfix :noremap <buffer> <S-CR> :execute 'cc '.line(".") <Bar> cclose <Bar> copen <Bar> wincmd J <CR>
+		au BufReadPost quickfix :noremap <buffer> <S-CR> :execute 'cc '.line(".") <Bar> cclose <Bar> copen <Bar> wincmd J<CR>
+		au BufReadPost quickfix :noremap <buffer> <leader>j :execute 'cc '.line(".") <Bar> cclose <Bar> copen <Bar> wincmd J <Bar> normal j <CR>
+		au BufReadPost quickfix :noremap <buffer> <leader>k :execute 'cc '.line(".") <Bar> cclose <Bar> copen <Bar> wincmd J <Bar> normal k <CR>
 		autocmd CmdwinEnter * map <buffer> ☠ <CR>q:
 		au BufReadPost quickfix :noremap <buffer> ☠ :execute 'cc '.line(".") <Bar> cclose <Bar> copen <Bar> wincmd J<CR>
     endif
@@ -159,7 +161,8 @@ autocmd FileType html setlocal indentkeys-=*<Return>
 " }
 
 " Custom Functions {
-    " TODO: automatically open quickfix window cscope, make etc, vimgrep
+    " TODO: automatically open quickfix window cscope, make etc
+    " TODO: pop errors off the quickfix window, append search, remove search
     " TODO: also shift enter in full command mode would be cool
     " TODO: get make functionality for c# unity project
     " TODO: install pyclewn and get functionality working
@@ -169,9 +172,10 @@ autocmd FileType html setlocal indentkeys-=*<Return>
 	" TODO: Fugitve doesn't do it's thing
 	
 	command! -nargs=1 -complete=command -bang Cdo call ArgPopAndRestore( ListFileNames( 'quickfix' ), <f-args> )
-	command! -nargs=1 -complete=command -bang Ldo exe ArgPopAndRestore( ListFileNames( 'loclist' ), <f-args> )
+	command! -nargs=1 -complete=command -bang Ldo call ArgPopAndRestore( ListFileNames( 'loclist' ), <f-args> )
 	"function! WrapList( listName, 
 
+	" TODO: consider buffdo instead of argdo then restor the buffer list
 	function! ArgPopAndRestore( exelist, execommand )
 		let current_arglist = argv()
 		exe 'args ' . a:exelist . '| argdo! ' . a:execommand
@@ -343,6 +347,8 @@ autocmd FileType html setlocal indentkeys-=*<Return>
 " Key (re)Mappings {
     let mapleader = ' '
 	
+	"nnoremap <F1> :TagbarToggle<CR>
+	noremap <F4> :set hlsearch! hlsearch?<CR>
 	noremap <F5> :call RefreshTags()<CR>
 
 	"nmap <silent> <leader>o :call ToggleList("Location List", 'l')<CR>
@@ -480,9 +486,41 @@ autocmd FileType html setlocal indentkeys-=*<Return>
 				\gV:call setreg('"', old_reg, old_regtype)<CR>
 				\:copen<CR>
 
-	nnoremap <leader>ff :vimgrep <C-R>=expand("<cword>")<CR> % <Bar> copen <Bar> wincmd J<CR>
+	function! FindInFile()
+		let needle = expand("<cword>")
+		let start = line(".")	
+		let results = search( needle )
+		exec "vimgrep " . needle . " % "
+		let @/ = needle
+		let counter = 0
+		for qf_item in getqflist()
+			let counter += 1
+			if qf_item[ 'lnum' ] == start
+				exe 'cc ' . counter 
+			endif
+		endfor
+		copen | wincmd J
+	endfunction
+
+	function! FindInPath()
+		let cFileType = &ft
+		let needle = expand("<cword>")
+		let start = line(".")	
+		exec "grep " . needle . " ./**/*." . cFileType	
+		let @/ = needle
+		let counter = 0
+		for qf_item in getqflist()
+			let counter += 1
+			if qf_item[ 'lnum' ] == start
+				exe 'cc ' . counter 
+			endif
+		endfor
+		copen | wincmd J
+	endfunction
+	"nnoremap <leader>ff :vimgrep <C-R>=expand("<cword>")<CR> % <Bar> copen <Bar> wincmd J <Bar> exec "norm /<C-R>=expand("<cword>")<CR>\<CR>" <CR>
+	nnoremap <leader>ff :call FindInFile()<CR>
 	noremap <leader>fg :Ack <C-R>=expand("<cword>")<CR><CR>
-	noremap <leader>fc :Ack --csharp <C-R>=expand("<cword>")<CR><CR>
+	noremap <leader>fc :call FindInPath()<CR>
 	noremap <leader><leader>t :echo "<C-R>=expand("<cword>")<CR>"<CR>
 
     " Easier horizontal scrolling
@@ -505,7 +543,7 @@ autocmd FileType html setlocal indentkeys-=*<Return>
 "            endif
 			if !exists("cscope_test_loaded")
 				let cscope_test_loaded = 1
-				cs add /Users/vcutten/workrepos/farm-mobile/.git/cscope.out
+				cs add /Users/$USER/workrepos/farm-mobile/.git/cscope.out
 			endif
             " show msg when any other cscope db added
             set cscopeverbose  
@@ -532,6 +570,7 @@ autocmd FileType html setlocal indentkeys-=*<Return>
 	
 	" Gist {
 		let g:gist_detect_filetype = 1
+		let g:gist_open_browser_after_post = 1
 	" }
 
     " OmniComplete {
@@ -615,7 +654,7 @@ autocmd FileType html setlocal indentkeys-=*<Return>
     " }
 
     " JSON {
-        nmap <leader>jt <Esc>:%!python -m json.tool<CR><Esc>:set filetype=json<CR>
+        nmap <leader><leader>jt <Esc>:%!python -m json.tool<CR><Esc>:set filetype=json<CR>
     " }
 
     " PyMode {
@@ -805,12 +844,7 @@ autocmd FileType html setlocal indentkeys-=*<Return>
         endif
     " }
 
-    " UndoTree {
-        nnoremap <Leader>u :GundoToggle<CR>
-        " If undotree is opened, it is likely one wants to interact with it.
-        let g:undotree_SetFocusWhenToggle=1
-    " }
-
+	nnoremap <Leader>u :GundoToggle<CR>
     " indent_guides {
         if !exists('g:spf13_no_indent_guides_autocolor')
             let g:indent_guides_auto_colors = 1

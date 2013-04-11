@@ -36,6 +36,7 @@ unalias ls 2>/dev/null
 if [[ $(uname) =~ Darwin ]]; then
 	# export FLEX_HOME="/usr/local/bin/flexsdks/4.6.0.23201B"
 	# export PAGER=vimpager
+	source ~/.pirate-vim/secrets
 	export FLEX_HOME="/usr/local/bin/flexsdks/4.6.0.23201Bair3.5"
 	export vimdir=$HOME/.vim
 	export EDITOR=/Applications/MacVim.app/Contents/MacOS/Vim
@@ -54,7 +55,18 @@ if [[ $(uname) =~ Darwin ]]; then
 	fi
 	vbp() { vim $@ ~/.pirate-vim/bashrc; }
 	cbp() { source ~/.bashrc; }
-	ls() { command ls "$@"; }
+	ls() { command ls -G "$@"; }
+	fn() { command find . -iname "$@"; }
+	ff() { 
+
+		if [[ "$2" == "" ]]; then 
+			type='*.cs';
+		else
+			type='*.'"$2";
+		fi
+		#echo "root: $1  stem: $type"
+		find . \( -name .\*~ -o -name \*.meta -prune \) -o -iname "$1""$type" -print; 
+	}
 	grep() { command grep --color=auto "$@"; }
 	ll() { command ls -lGh "$@"; }
 	la() { command ls -lGha "$@"; }
@@ -328,6 +340,10 @@ showAll(){
 }
 nonunicode(){
     grep --color='always' -Prn "[\x80-\xFF]" $1
+}
+
+brobot-jira(){
+	curl -u $JIRA_ACCT:$JIRA_PSWD https://jira.corp.zynga.com/rest/api/latest/issue/FARMTWO-39652.json
 }
 
 brobot-merge(){
