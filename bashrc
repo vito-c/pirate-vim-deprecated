@@ -280,7 +280,7 @@ trcflash()
 
 trcunity()
 {
-	tail -f "$@" "/Users/vcutten/Library/Logs/Unity/Editor.log"
+	tail -f "$@" "/Users/$USER/Library/Logs/Unity/Editor.log"
 }
 
 trcphp()
