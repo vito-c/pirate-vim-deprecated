@@ -42,6 +42,7 @@
 "Experimential
 " Fix indenting of html files
 autocmd FileType html setlocal indentkeys-=*<Return>
+autocmd FileType cs setlocal efm=%*\\s%f\(%l\\,%c\):\ error\ CS%n:\ %m
 
 " Environment {
 
