@@ -2,7 +2,6 @@
 # pirate-vim : Vito's Vim Distro
 # Special Thanks to Steve Francia and spf13-vim distro
 
-
                        .ed'''' '''$$$$be.                     
                      -'           ^''**$$$e.                  
                    .'                   '$$$c                 
